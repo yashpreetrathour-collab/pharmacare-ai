@@ -1,0 +1,3450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width,
+               initial-scale=1.0,
+               maximum-scale=1.0,
+               user-scalable=no">
+
+<title>PharmaCare AI | Dr. Yashpreet Singh</title>
+
+<style>
+
+/* =====================================================
+   PHARMACARE VERSION 3
+   MOBILE-FIRST PHARMACIST CONSULTATION WEBSITE
+   ===================================================== */
+
+:root {
+    --primary: #087f8c;
+    --primary-dark: #075f69;
+    --secondary: #0b4f6c;
+    --green: #20a36a;
+    --red: #dc3545;
+    --orange: #e89b18;
+
+    --bg: #f4fafb;
+    --card: #ffffff;
+    --text: #263b43;
+    --muted: #6d7d83;
+    --border: #dce9ec;
+
+    --shadow:
+        0 8px 25px rgba(0,0,0,0.08);
+
+    --radius: 18px;
+}
+
+body.dark {
+    --bg: #0e1b20;
+    --card: #17282e;
+    --text: #edf7f8;
+    --muted: #b1c2c6;
+    --border: #2b4148;
+}
+
+/* RESET */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    background: var(--bg);
+    color: var(--text);
+
+    line-height: 1.5;
+
+    transition: .3s;
+
+    padding-bottom: 75px;
+}
+
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+a {
+    text-decoration: none;
+}
+
+img {
+    max-width: 100%;
+}
+
+
+/* =====================================================
+   MOBILE BOTTOM NAVIGATION
+   ===================================================== */
+
+.mobile-nav {
+
+    position: fixed;
+
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    height: 68px;
+
+    background: var(--card);
+
+    border-top:
+        1px solid var(--border);
+
+    box-shadow:
+        0 -5px 20px
+        rgba(0,0,0,.08);
+
+    display: flex;
+
+    justify-content:
+        space-around;
+
+    align-items: center;
+
+    z-index: 1000;
+}
+
+.mobile-nav a {
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 3px;
+
+    font-size: 11px;
+
+    color: var(--muted);
+
+    min-width: 55px;
+}
+
+.mobile-nav a span {
+
+    font-size: 22px;
+}
+
+.mobile-nav a.active {
+
+    color: var(--primary);
+
+    font-weight: bold;
+}
+
+
+/* =====================================================
+   HEADER
+   ===================================================== */
+
+.top-header {
+
+    background: var(--card);
+
+    padding:
+        16px 18px;
+
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items: center;
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 900;
+
+    box-shadow:
+        0 3px 15px
+        rgba(0,0,0,.06);
+}
+
+.logo {
+
+    font-size: 22px;
+
+    font-weight: 800;
+
+    color: var(--primary);
+}
+
+.logo span {
+
+    color: var(--secondary);
+}
+
+.header-actions {
+
+    display: flex;
+
+    gap: 8px;
+}
+
+.icon-btn {
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: var(--bg);
+
+    color: var(--text);
+
+    font-size: 18px;
+}
+
+
+/* =====================================================
+   COMMON
+   ===================================================== */
+
+.container {
+
+    width: 92%;
+
+    max-width: 1000px;
+
+    margin: auto;
+}
+
+section {
+
+    padding:
+        55px 0;
+}
+
+.section-title {
+
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.section-title h2 {
+
+    font-size: 28px;
+
+    color: var(--text);
+
+    margin-bottom: 8px;
+}
+
+.section-title p {
+
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+.btn {
+
+    border: none;
+
+    padding:
+        13px 18px;
+
+    border-radius: 12px;
+
+    font-weight: 700;
+
+    font-size: 14px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+}
+
+.btn-primary {
+
+    background:
+        var(--primary);
+
+    color: white;
+}
+
+.btn-primary:active {
+
+    transform:
+        scale(.97);
+}
+
+.btn-green {
+
+    background:
+        var(--green);
+
+    color: white;
+}
+
+.btn-danger {
+
+    background:
+        #ffe2e5;
+
+    color:
+        var(--red);
+}
+
+.full-btn {
+
+    width: 100%;
+}
+
+
+/* =====================================================
+   HERO
+   ===================================================== */
+
+.hero {
+
+    background:
+        linear-gradient(
+            145deg,
+            #dff6f8,
+            var(--bg)
+        );
+
+    padding:
+        45px 0 50px;
+}
+
+body.dark .hero {
+
+    background:
+        linear-gradient(
+            145deg,
+            #163a40,
+            var(--bg)
+        );
+}
+
+.hero-badge {
+
+    display: inline-block;
+
+    background:
+        rgba(8,127,140,.12);
+
+    color:
+        var(--primary);
+
+    padding:
+        7px 12px;
+
+    border-radius:
+        20px;
+
+    font-size:
+        12px;
+
+    font-weight:
+        bold;
+
+    margin-bottom:
+        15px;
+}
+
+.hero h1 {
+
+    font-size:
+        38px;
+
+    line-height:
+        1.1;
+
+    margin-bottom:
+        15px;
+}
+
+.hero h1 span {
+
+    color:
+        var(--primary);
+}
+
+.hero p {
+
+    color:
+        var(--muted);
+
+    font-size:
+        15px;
+
+    margin-bottom:
+        22px;
+}
+
+.hero-buttons {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        10px;
+}
+
+
+/* =====================================================
+   PHARMACIST CARD
+   ===================================================== */
+
+.pharmacist-card {
+
+    margin-top:
+        25px;
+
+    background:
+        var(--card);
+
+    padding:
+        20px;
+
+    border-radius:
+        var(--radius);
+
+    box-shadow:
+        var(--shadow);
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    gap:
+        15px;
+}
+
+.doctor-avatar {
+
+    width:
+        65px;
+
+    height:
+        65px;
+
+    min-width:
+        65px;
+
+    border-radius:
+        50%;
+
+    background:
+        var(--primary);
+
+    color:
+        white;
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-size:
+        32px;
+}
+
+.pharmacist-card h3 {
+
+    font-size:
+        17px;
+}
+
+.pharmacist-card p {
+
+    color:
+        var(--muted);
+
+    font-size:
+        13px;
+}
+
+.available {
+
+    display:
+        inline-block;
+
+    color:
+        var(--green);
+
+    font-size:
+        12px;
+
+    font-weight:
+        bold;
+
+    margin-top:
+        4px;
+}
+
+
+/* =====================================================
+   SERVICE CARDS
+   ===================================================== */
+
+.service-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        repeat(2,1fr);
+
+    gap:
+        12px;
+}
+
+.service-card {
+
+    background:
+        var(--card);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        15px;
+
+    padding:
+        18px;
+
+    box-shadow:
+        0 5px 15px
+        rgba(0,0,0,.04);
+}
+
+.service-icon {
+
+    font-size:
+        30px;
+
+    margin-bottom:
+        8px;
+}
+
+.service-card h3 {
+
+    font-size:
+        15px;
+
+    margin-bottom:
+        5px;
+
+    color:
+        var(--secondary);
+}
+
+.service-card p {
+
+    color:
+        var(--muted);
+
+    font-size:
+        12px;
+}
+
+
+/* =====================================================
+   CONSULTATION FORM
+   ===================================================== */
+
+.form-card {
+
+    background:
+        var(--card);
+
+    border-radius:
+        var(--radius);
+
+    padding:
+        22px;
+
+    box-shadow:
+        var(--shadow);
+}
+
+.form-group {
+
+    margin-bottom:
+        16px;
+}
+
+label {
+
+    display:
+        block;
+
+    font-weight:
+        700;
+
+    font-size:
+        13px;
+
+    margin-bottom:
+        7px;
+}
+
+input,
+select,
+textarea {
+
+    width:
+        100%;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        11px;
+
+    padding:
+        13px;
+
+    background:
+        var(--card);
+
+    color:
+        var(--text);
+
+    outline:
+        none;
+
+    font-size:
+        14px;
+}
+
+textarea {
+
+    min-height:
+        110px;
+
+    resize:
+        vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+
+    border-color:
+        var(--primary);
+}
+
+.success-box {
+
+    display:
+        none;
+
+    margin-top:
+        15px;
+
+    padding:
+        13px;
+
+    border-radius:
+        10px;
+
+    background:
+        #e3f8ec;
+
+    color:
+        #137344;
+
+    font-size:
+        13px;
+
+    font-weight:
+        bold;
+}
+
+
+/* =====================================================
+   WHY CONSULT
+   ===================================================== */
+
+.reason-list {
+
+    display:
+        flex;
+
+    flex-direction:
+        column;
+
+    gap:
+        12px;
+}
+
+.reason {
+
+    display:
+        flex;
+
+    gap:
+        12px;
+
+    background:
+        var(--card);
+
+    padding:
+        15px;
+
+    border-radius:
+        13px;
+
+    border:
+        1px solid
+        var(--border);
+}
+
+.reason-icon {
+
+    width:
+        42px;
+
+    height:
+        42px;
+
+    min-width:
+        42px;
+
+    border-radius:
+        12px;
+
+    background:
+        rgba(8,127,140,.1);
+
+    display:
+        flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    font-size:
+        21px;
+}
+
+.reason h3 {
+
+    font-size:
+        14px;
+}
+
+.reason p {
+
+    font-size:
+        12px;
+
+    color:
+        var(--muted);
+}
+
+
+/* =====================================================
+   CONTACT
+   ===================================================== */
+
+.contact-box {
+
+    background:
+        var(--secondary);
+
+    color:
+        white;
+
+    border-radius:
+        22px;
+
+    padding:
+        25px;
+
+    text-align:
+        center;
+}
+
+.contact-box h2 {
+
+    margin-bottom:
+        8px;
+}
+
+.contact-box p {
+
+    font-size:
+        13px;
+
+    opacity:
+        .85;
+
+    margin-bottom:
+        18px;
+}
+
+.contact-buttons {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        10px;
+}
+
+.contact-buttons a {
+
+    padding:
+        12px;
+
+    border-radius:
+        10px;
+
+    background:
+        rgba(255,255,255,.15);
+
+    color:
+        white;
+
+    font-weight:
+        bold;
+
+    font-size:
+        13px;
+}
+
+
+/* =====================================================
+   FOOTER
+   ===================================================== */
+
+footer {
+
+    background:
+        #102a35;
+
+    color:
+        white;
+
+    text-align:
+        center;
+
+    padding:
+        25px 15px;
+
+    font-size:
+        12px;
+}
+
+footer strong {
+
+    color:
+        #64d4dc;
+}
+
+
+/* =====================================================
+   LOGIN
+   ===================================================== */
+
+.modal {
+
+    display:
+        none;
+
+    position:
+        fixed;
+
+    inset:
+        0;
+
+    background:
+        rgba(0,0,0,.7);
+
+    z-index:
+        3000;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    padding:
+        20px;
+}
+
+.modal.show {
+
+    display:
+        flex;
+}
+
+.login-card {
+
+    width:
+        100%;
+
+    max-width:
+        390px;
+
+    background:
+        var(--card);
+
+    border-radius:
+        20px;
+
+    padding:
+        25px;
+
+    box-shadow:
+        0 20px 60px
+        rgba(0,0,0,.25);
+}
+
+.login-top {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    margin-bottom:
+        20px;
+}
+
+.login-top h2 {
+
+    color:
+        var(--primary);
+
+    font-size:
+        21px;
+}
+
+.close-btn {
+
+    border:
+        none;
+
+    background:
+        none;
+
+    color:
+        var(--text);
+
+    font-size:
+        27px;
+}
+
+
+/* =====================================================
+   DASHBOARD
+   ===================================================== */
+
+#dashboard {
+
+    display:
+        none;
+}
+
+.dashboard-header {
+
+    background:
+        var(--card);
+
+    padding:
+        17px;
+
+    position:
+        sticky;
+
+    top:
+        0;
+
+    z-index:
+        500;
+
+    box-shadow:
+        var(--shadow);
+}
+
+.dashboard-top {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+}
+
+.dashboard-title h2 {
+
+    color:
+        var(--primary);
+
+    font-size:
+        20px;
+}
+
+.dashboard-title p {
+
+    color:
+        var(--muted);
+
+    font-size:
+        12px;
+}
+
+.logout {
+
+    border:
+        none;
+
+    background:
+        #ffe3e6;
+
+    color:
+        var(--red);
+
+    padding:
+        9px 12px;
+
+    border-radius:
+        9px;
+
+    font-weight:
+        bold;
+}
+
+
+/* STATS */
+
+.stats-grid {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        12px;
+
+    margin:
+        20px 0;
+}
+
+.stat-card {
+
+    background:
+        var(--card);
+
+    padding:
+        18px;
+
+    border-radius:
+        15px;
+
+    box-shadow:
+        var(--shadow);
+}
+
+.stat-card .icon {
+
+    font-size:
+        23px;
+}
+
+.stat-card h3 {
+
+    font-size:
+        12px;
+
+    color:
+        var(--muted);
+
+    margin-top:
+        5px;
+}
+
+.stat-number {
+
+    font-size:
+        28px;
+
+    font-weight:
+        800;
+
+    color:
+        var(--primary);
+}
+
+
+/* DASHBOARD PANEL */
+
+.dashboard-panel {
+
+    background:
+        var(--card);
+
+    padding:
+        18px;
+
+    border-radius:
+        17px;
+
+    box-shadow:
+        var(--shadow);
+
+    margin-bottom:
+        18px;
+}
+
+.panel-title {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    margin-bottom:
+        15px;
+}
+
+.panel-title h3 {
+
+    font-size:
+        17px;
+}
+
+.search {
+
+    margin-bottom:
+        15px;
+}
+
+
+/* REQUEST CARD */
+
+.request-card {
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        13px;
+
+    padding:
+        15px;
+
+    margin-bottom:
+        10px;
+}
+
+.request-top {
+
+    display:
+        flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        flex-start;
+
+    gap:
+        10px;
+}
+
+.patient-name {
+
+    font-weight:
+        bold;
+
+    font-size:
+        15px;
+}
+
+.request-detail {
+
+    color:
+        var(--muted);
+
+    font-size:
+        12px;
+
+    margin-top:
+        4px;
+}
+
+.badge {
+
+    padding:
+        5px 9px;
+
+    border-radius:
+        20px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        bold;
+
+    white-space:
+        nowrap;
+}
+
+.badge.pending {
+
+    background:
+        #fff0ca;
+
+    color:
+        #8c6500;
+}
+
+.badge.completed {
+
+    background:
+        #dff6e9;
+
+    color:
+        #137344;
+}
+
+.request-message {
+
+    margin:
+        12px 0;
+
+    padding:
+        10px;
+
+    background:
+        var(--bg);
+
+    border-radius:
+        9px;
+
+    font-size:
+        12px;
+}
+
+.request-actions {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        7px;
+}
+
+.request-actions button {
+
+    border:
+        none;
+
+    padding:
+        9px;
+
+    border-radius:
+        8px;
+
+    font-size:
+        11px;
+
+    font-weight:
+        bold;
+}
+
+.complete {
+
+    background:
+        #dff6e9;
+
+    color:
+        #137344;
+}
+
+.delete {
+
+    background:
+        #ffe2e5;
+
+    color:
+        var(--red);
+}
+
+
+/* =====================================================
+   DASHBOARD MEDICINE CARDS
+   ===================================================== */
+
+.medicine {
+
+    display:
+        grid;
+
+    grid-template-columns:
+        1fr 1fr;
+
+    gap:
+        10px;
+}
+
+.med-card {
+
+    padding:
+        14px;
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius:
+        12px;
+}
+
+.med-card h4 {
+
+    color:
+        var(--primary);
+
+    font-size:
+        14px;
+
+    margin-bottom:
+        5px;
+}
+
+.med-card p {
+
+    font-size:
+        11px;
+
+    color:
+        var(--muted);
+}
+
+
+/* =====================================================
+   DISCLAIMER
+   ===================================================== */
+
+.disclaimer {
+
+    margin:
+        25px 0;
+
+    padding:
+        15px;
+
+    border-radius:
+        12px;
+
+    background:
+        #fff5d7;
+
+    color:
+        #725800;
+
+    font-size:
+        11px;
+
+    text-align:
+        center;
+}
+
+
+/* =====================================================
+   EMPTY STATE
+   ===================================================== */
+
+.empty {
+
+    text-align:
+        center;
+
+    padding:
+        30px 10px;
+
+    color:
+        var(--muted);
+}
+
+.empty-icon {
+
+    font-size:
+        40px;
+
+    margin-bottom:
+        8px;
+}
+
+
+/* =====================================================
+   TABLET / DESKTOP
+   ===================================================== */
+
+@media(min-width:700px) {
+
+    body {
+        padding-bottom:
+            0;
+    }
+
+    .mobile-nav {
+        display:
+            none;
+    }
+
+    .hero {
+        padding:
+            80px 0;
+    }
+
+    .hero h1 {
+        font-size:
+            55px;
+    }
+
+    .hero-buttons {
+        max-width:
+            400px;
+    }
+
+    .service-grid {
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+
+    .stats-grid {
+        grid-template-columns:
+            repeat(4,1fr);
+    }
+
+    .request-card {
+        padding:
+            20px;
+    }
+
+    .medicine {
+        grid-template-columns:
+            repeat(3,1fr);
+    }
+}
+
+
+/* =====================================================
+   VERSION 4 - PHARMA AI
+   ===================================================== */
+.ai-section{background:linear-gradient(145deg,#e9f9fb,var(--bg))}
+body.dark .ai-section{background:linear-gradient(145deg,#12343a,var(--bg))}
+.ai-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+.ai-badge{display:inline-block;background:rgba(8,127,140,.12);color:var(--primary);padding:7px 12px;border-radius:20px;font-size:12px;font-weight:800;margin-bottom:12px}
+.ai-title{font-size:24px;margin-bottom:7px}
+.ai-subtitle{color:var(--muted);font-size:13px;margin-bottom:16px}
+.ai-chips{display:flex;gap:7px;overflow-x:auto;padding:4px 0 12px;scrollbar-width:none}
+.ai-chips::-webkit-scrollbar{display:none}
+.ai-chip{flex:0 0 auto;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:20px;padding:8px 11px;font-size:11px}
+.ai-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:9px}
+.ai-answer{display:none;margin-top:16px;padding:16px;border-radius:14px;background:var(--bg);border:1px solid var(--border)}
+.ai-answer.show{display:block}
+.ai-answer-head{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.ai-answer-head strong{color:var(--primary)}
+.ai-answer-text{font-size:13px;white-space:pre-line}
+.ai-copy{border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:8px;padding:7px 9px;font-size:11px}
+.ai-warning{margin-top:12px;padding:10px;border-radius:10px;background:#fff5d7;color:#725800;font-size:11px}
+.ai-status{font-size:11px;color:var(--muted);margin-top:8px;min-height:16px}
+.ai-history{margin-top:15px}
+.ai-history-item{padding:10px 0;border-bottom:1px solid var(--border);font-size:12px}
+.ai-history-q{font-weight:700;margin-bottom:4px}
+.ai-clear{border:0;background:transparent;color:var(--red);font-size:11px}
+.ai-typing{display:inline-flex;gap:4px}
+.ai-typing span{width:5px;height:5px;border-radius:50%;background:var(--primary);animation:aidot 1s infinite alternate}
+.ai-typing span:nth-child(2){animation-delay:.2s}.ai-typing span:nth-child(3){animation-delay:.4s}
+@keyframes aidot{from{opacity:.25;transform:translateY(0)}to{opacity:1;transform:translateY(-3px)}}
+@media(min-width:700px){.ai-card{padding:28px}.ai-title{font-size:30px}}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =====================================================
+     MAIN WEBSITE
+     ===================================================== -->
+
+<div id="mainWebsite">
+
+
+<!-- HEADER -->
+
+<header class="top-header">
+
+    <div class="logo">
+        💊 Pharma<span>Care</span>
+    </div>
+
+    <div class="header-actions">
+
+        <button
+            class="icon-btn"
+            onclick="toggleDarkMode()">
+            🌙
+        </button>
+
+        <button
+            class="icon-btn"
+            onclick="openLogin()">
+            👨‍⚕️
+        </button>
+
+    </div>
+
+</header>
+
+
+<!-- HERO -->
+
+<section class="hero" id="home">
+
+<div class="container">
+
+    <div class="hero-badge">
+        🎓 D.Pharm College Project
+    </div>
+
+    <h1>
+        Your Medicine.
+        <span>Your Questions.</span>
+        Better Guidance.
+    </h1>
+
+    <p>
+        Connect with a pharmacist for medication
+        counselling, medicine information and
+        responsible medicine-use education.
+    </p>
+
+
+    <div class="hero-buttons">
+
+        <a
+            href="#consultation"
+            class="btn btn-primary">
+
+            📅 Consult Pharmacist
+
+        </a>
+
+        <a
+            href="#pharmaAI"
+            class="btn"
+            style="
+            background:var(--card);
+            color:var(--primary);
+            border:1px solid var(--primary);">
+
+            🤖 Ask AI
+
+        </a>
+
+    </div>
+
+
+    <!-- PHARMACIST PROFILE -->
+
+    <div class="pharmacist-card">
+
+        <div class="doctor-avatar">
+            👨‍⚕️
+        </div>
+
+        <div>
+
+            <!-- CHANGE PHARMACIST NAME HERE -->
+
+            <h3>
+                Dr. Yashpreet Singh
+            </h3>
+
+            <p>
+                Registered Pharmacist
+            </p>
+
+            <span class="available">
+                ● Available for consultation
+            </span>
+
+        </div>
+
+    </div>
+
+</div>
+
+</section>
+
+
+<!-- SERVICES -->
+
+<section id="services">
+
+<div class="container">
+
+<div class="section-title">
+
+    <h2>
+        How We Can Help
+    </h2>
+
+    <p>
+        Simple and educational pharmacist services.
+    </p>
+
+</div>
+
+
+<div class="service-grid">
+
+
+<div class="service-card">
+
+    <div class="service-icon">
+        💊
+    </div>
+
+    <h3>
+        Medication Counselling
+    </h3>
+
+    <p>
+        Learn how medicines should be used
+        and stored safely.
+    </p>
+
+</div>
+
+
+<div class="service-card">
+
+    <div class="service-icon">
+        🤖
+    </div>
+
+    <h3>
+        PharmaAI Assistant
+    </h3>
+
+    <p>
+        Ask educational questions about medicines and pharmacy topics.
+    </p>
+
+</div>
+
+
+<div class="service-card">
+
+    <div class="service-icon">
+        📖
+    </div>
+
+    <h3>
+        Medicine Information
+    </h3>
+
+    <p>
+        General information about medicines
+        and responsible use.
+    </p>
+
+</div>
+
+
+<div class="service-card">
+
+    <div class="service-icon">
+        ⚠️
+    </div>
+
+    <h3>
+        Interaction Awareness
+    </h3>
+
+    <p>
+        Learn about possible medicine,
+        food and supplement interactions.
+    </p>
+
+</div>
+
+
+<div class="service-card">
+
+    <div class="service-icon">
+        📋
+    </div>
+
+    <h3>
+        Medication Review
+    </h3>
+
+    <p>
+        Demonstration of reviewing
+        a patient's medicines.
+    </p>
+
+</div>
+
+
+<div class="service-card">
+
+    <div class="service-icon">
+        🩺
+    </div>
+
+    <h3>
+        Health Education
+    </h3>
+
+    <p>
+        Basic health and medicine-use
+        awareness.
+    </p>
+
+</div>
+
+
+<div class="service-card">
+
+    <div class="service-icon">
+        🛡️
+    </div>
+
+    <h3>
+        Safe Medicine Use
+    </h3>
+
+    <p>
+        Promoting responsible and
+        informed medicine practices.
+    </p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- =====================================================
+     VERSION 4 - PHARMA AI ASSISTANT
+     ===================================================== -->
+<section class="ai-section" id="pharmaAI">
+<div class="container">
+<div class="section-title">
+<div class="ai-badge">🤖 PharmaAI • Version 4</div>
+<h2>Ask PharmaAI</h2>
+<p>Quick educational answers for medicines, pharmacy and pharmaceutical chemistry.</p>
+</div>
+<div class="ai-card">
+<h3 class="ai-title">💬 Ask Your Question</h3>
+<p class="ai-subtitle">Ask in simple language. This offline AI knowledge assistant works without an API key.</p>
+<div class="ai-chips">
+<button class="ai-chip" onclick="askAIChip('What is paracetamol used for?')">💊 Paracetamol</button>
+<button class="ai-chip" onclick="askAIChip('What is ORS?')">🥤 ORS</button>
+<button class="ai-chip" onclick="askAIChip('What are antibiotics?')">🦠 Antibiotics</button>
+<button class="ai-chip" onclick="askAIChip('What is volumetric analysis?')">🧪 Volumetric Analysis</button>
+<button class="ai-chip" onclick="askAIChip('What are sources of errors?')">📚 Errors</button>
+</div>
+<textarea id="aiQuestion" placeholder="Type your pharmacy or medicine question here..."></textarea>
+<div class="ai-actions">
+<button class="btn btn-primary" onclick="askPharmaAI()">🤖 Ask AI</button>
+<button class="btn" style="background:var(--bg);color:var(--text);border:1px solid var(--border)" onclick="clearAI()">🗑 Clear</button>
+</div>
+<div id="aiStatus" class="ai-status"></div>
+<div id="aiAnswer" class="ai-answer">
+<div class="ai-answer-head"><strong>🤖 PharmaAI Answer</strong><button class="ai-copy" onclick="copyAIAnswer()">📋 Copy</button></div>
+<div id="aiAnswerText" class="ai-answer-text"></div>
+<div class="ai-warning">⚠️ Educational use only. This assistant does not diagnose, prescribe, or replace a qualified doctor or pharmacist. For personal treatment decisions or emergencies, seek professional medical care.</div>
+</div>
+<div class="ai-history">
+<div class="panel-title"><h3>🕘 Recent Questions</h3><button class="ai-clear" onclick="clearAIHistory()">Clear history</button></div>
+<div id="aiHistoryList"></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- CONSULTATION -->
+
+<section id="consultation">
+
+<div class="container">
+
+<div class="section-title">
+
+    <h2>
+        Book Consultation
+    </h2>
+
+    <p>
+        Fill in the details below.
+    </p>
+
+</div>
+
+
+<div class="form-card">
+
+<form id="consultationForm">
+
+
+<div class="form-group">
+
+<label>
+    👤 Patient Name
+</label>
+
+<input
+    type="text"
+    id="patientName"
+    placeholder="Enter your full name"
+    required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+    📱 Mobile Number
+</label>
+
+<input
+    type="tel"
+    id="patientPhone"
+    placeholder="Enter mobile number"
+    inputmode="numeric"
+    required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+    💊 Consultation Type
+</label>
+
+<select
+    id="consultationType"
+    required>
+
+<option value="">
+    Choose consultation
+</option>
+
+<option>
+    Medication Counselling
+</option>
+
+<option>
+    Medicine Information
+</option>
+
+<option>
+    Interaction Awareness
+</option>
+
+<option>
+    Medication Review
+</option>
+
+<option>
+    Health Education
+</option>
+
+</select>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+    📅 Preferred Date
+</label>
+
+<input
+    type="date"
+    id="appointmentDate"
+    required>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+    📝 Your Question
+</label>
+
+<textarea
+    id="patientMessage"
+    placeholder="Tell the pharmacist what you want to discuss..."
+    required></textarea>
+
+</div>
+
+
+<button
+    type="submit"
+    class="btn btn-primary full-btn">
+
+    📤 Submit Consultation Request
+
+</button>
+
+
+<div
+    class="success-box"
+    id="successBox">
+</div>
+
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- WHY CONSULT -->
+
+<section>
+
+<div class="container">
+
+<div class="section-title">
+
+<h2>
+    Why Talk to a Pharmacist?
+</h2>
+
+<p>
+    Pharmacists can support safe and informed
+    medicine use.
+</p>
+
+</div>
+
+
+<div class="reason-list">
+
+
+<div class="reason">
+
+<div class="reason-icon">
+    💡
+</div>
+
+<div>
+
+<h3>
+    Understand Your Medicine
+</h3>
+
+<p>
+    Learn basic information about how
+    medicines are intended to be used.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="reason">
+
+<div class="reason-icon">
+    ⏰
+</div>
+
+<div>
+
+<h3>
+    Improve Medicine Adherence
+</h3>
+
+<p>
+    Understand the importance of following
+    the prescribed treatment plan.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="reason">
+
+<div class="reason-icon">
+    ⚠️
+</div>
+
+<div>
+
+<h3>
+    Be Aware of Precautions
+</h3>
+
+<p>
+    Learn about important precautions
+    and medicine-use safety.
+</p>
+
+</div>
+
+</div>
+
+
+<div class="reason">
+
+<div class="reason-icon">
+    🛡️
+</div>
+
+<div>
+
+<h3>
+    Promote Safe Medicine Use
+</h3>
+
+<p>
+    Pharmacist counselling can help patients
+    make informed decisions about medicines.
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- CONTACT -->
+
+<section>
+
+<div class="container">
+
+<div class="contact-box">
+
+<h2>
+    Need Pharmacist Guidance?
+</h2>
+
+<p>
+    Contact our demonstration pharmacist
+    consultation service.
+</p>
+
+<div class="contact-buttons">
+
+<a href="tel:+919675061545">
+    📞 Call
+</a>
+
+<a href="https://wa.me/919675061545"
+   target="_blank">
+    💬 WhatsApp
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- DISCLAIMER -->
+
+<div class="container">
+
+<div class="disclaimer">
+
+<strong>
+    ⚠️ College Project Disclaimer
+</strong>
+
+<br>
+
+This website is created for educational and
+demonstration purposes. It does not provide
+actual diagnosis, prescription or emergency
+medical treatment.
+
+</div>
+
+</div>
+
+
+<!-- FOOTER -->
+
+<footer>
+
+<p>
+    © 2026 PharmaCare
+</p>
+
+<p>
+    Pharmacist Consultation College Project
+</p>
+
+<p>
+    Created by
+    <strong>DR. YASHPREET SINGH</strong>
+</p>
+
+</footer>
+
+
+</div>
+
+
+<!-- =====================================================
+     MOBILE NAV
+     ===================================================== -->
+
+<nav class="mobile-nav">
+
+<a
+    href="#home"
+    class="active">
+
+    <span>🏠</span>
+    Home
+
+</a>
+
+<a href="#services">
+
+    <span>💊</span>
+    Services
+
+</a>
+
+<a href="#pharmaAI">
+
+    <span>🤖</span>
+    AI
+
+</a>
+
+<a href="#consultation">
+
+    <span>📅</span>
+    Consult
+
+</a>
+
+<a href="#home"
+   onclick="openLogin()">
+
+    <span>👨‍⚕️</span>
+    Pharmacist
+
+</a>
+
+</nav>
+
+
+<!-- =====================================================
+     LOGIN MODAL
+     ===================================================== -->
+
+<div
+    class="modal"
+    id="loginModal">
+
+<div class="login-card">
+
+<div class="login-top">
+
+<h2>
+    👨‍⚕️ Pharmacist Login
+</h2>
+
+<button
+    class="close-btn"
+    onclick="closeLogin()">
+
+    ×
+
+</button>
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+    Username
+</label>
+
+<input
+    type="text"
+    id="loginUsername"
+    placeholder="Enter username">
+
+</div>
+
+
+<div class="form-group">
+
+<label>
+    Password
+</label>
+
+<input
+    type="password"
+    id="loginPassword"
+    placeholder="Enter password">
+
+</div>
+
+
+<button
+    class="btn btn-primary full-btn"
+    onclick="login()">
+
+    🔐 Login
+
+</button>
+
+
+<p
+    id="loginError"
+    style="
+    color:var(--red);
+    text-align:center;
+    font-size:12px;
+    margin-top:12px;">
+</p>
+
+
+<p
+    style="
+    text-align:center;
+    color:var(--muted);
+    font-size:11px;
+    margin-top:15px;">
+
+    Demo: pharmacist / 1234
+
+</p>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     PHARMACIST DASHBOARD
+     ===================================================== -->
+
+<div id="dashboard">
+
+
+<header class="dashboard-header">
+
+<div class="dashboard-top">
+
+<div class="dashboard-title">
+
+<h2>
+    💊 Pharmacist Dashboard
+</h2>
+
+<p>
+    PharmaCare Management Panel
+</p>
+
+</div>
+
+
+<button
+    class="logout"
+    onclick="logout()">
+
+    Logout
+
+</button>
+
+</div>
+
+</header>
+
+
+<div class="container">
+
+
+<!-- STATISTICS -->
+
+<div class="stats-grid">
+
+
+<div class="stat-card">
+
+<div class="icon">
+    📋
+</div>
+
+<h3>
+    Total Requests
+</h3>
+
+<div
+    class="stat-number"
+    id="totalCount">
+    0
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="icon">
+    ⏳
+</div>
+
+<h3>
+    Pending
+</h3>
+
+<div
+    class="stat-number"
+    id="pendingCount">
+    0
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="icon">
+    ✅
+</div>
+
+<h3>
+    Completed
+</h3>
+
+<div
+    class="stat-number"
+    id="completedCount">
+    0
+</div>
+
+</div>
+
+
+<div class="stat-card">
+
+<div class="icon">
+    📅
+</div>
+
+<h3>
+    Today
+</h3>
+
+<div
+    class="stat-number"
+    id="todayDate"
+    style="font-size:17px">
+</div>
+
+</div>
+
+
+</div>
+
+
+<!-- REQUESTS -->
+
+<div class="dashboard-panel">
+
+<div class="panel-title">
+
+<h3>
+    📋 Patient Requests
+</h3>
+
+</div>
+
+
+<input
+    class="search"
+    type="search"
+    id="searchRequests"
+    placeholder="🔎 Search patient or service..."
+    oninput="renderRequests()">
+
+
+<div id="requestList">
+</div>
+
+</div>
+
+
+<!-- MEDICINE INFORMATION -->
+
+<div class="dashboard-panel">
+
+<div class="panel-title">
+
+<h3>
+    💊 Quick Medicine Information
+</h3>
+
+</div>
+
+
+<div class="medicine">
+
+
+<div class="med-card">
+
+<h4>
+    Paracetamol
+</h4>
+
+<p>
+    Commonly used as an analgesic
+    and antipyretic.
+</p>
+
+</div>
+
+
+<div class="med-card">
+
+<h4>
+    ORS
+</h4>
+
+<p>
+    Helps replace fluids and
+    electrolytes.
+</p>
+
+</div>
+
+
+<div class="med-card">
+
+<h4>
+    Antacid
+</h4>
+
+<p>
+    Used to relieve symptoms
+    related to excess stomach acid.
+</p>
+
+</div>
+
+
+<div class="med-card">
+
+<h4>
+    Antibiotics
+</h4>
+
+<p>
+    Should be used only as directed
+    by an appropriate healthcare professional.
+</p>
+
+</div>
+
+
+<div class="med-card">
+
+<h4>
+    Vitamins
+</h4>
+
+<p>
+    Supplements should be used
+    appropriately and responsibly.
+</p>
+
+</div>
+
+
+<div class="med-card">
+
+<h4>
+    Storage
+</h4>
+
+<p>
+    Medicines should be stored
+    according to their instructions.
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<!-- PROJECT -->
+
+<div class="dashboard-panel">
+
+<div class="panel-title">
+
+<h3>
+    🎓 Project Information
+</h3>
+
+</div>
+
+<p style="font-size:13px">
+
+<strong>Project:</strong>
+Pharmacist Consultation Website
+
+<br><br>
+
+<strong>Course:</strong>
+D.Pharm First Year
+
+<br><br>
+
+<strong>Student:</strong>
+YASHPREET SINGH
+
+<br><br>
+
+<strong>Purpose:</strong>
+Educational demonstration of digital
+pharmacist consultation and patient
+counselling.
+
+</p>
+
+</div>
+
+
+<div class="disclaimer">
+
+<strong>
+    ⚠️ Demonstration Dashboard
+</strong>
+
+<br>
+
+The patient requests displayed here are
+stored locally in the browser for this
+college-project demonstration.
+
+</div>
+
+
+</div>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+   PHARMACARE VERSION 4 JAVASCRIPT • AI EDITION
+   ===================================================== */
+
+
+/* =====================================================
+   DARK MODE
+   ===================================================== */
+
+function toggleDarkMode() {
+
+    document.body.classList.toggle("dark");
+
+    localStorage.setItem(
+        "pharmaDark",
+        document.body.classList.contains("dark")
+    );
+
+}
+
+if (
+    localStorage.getItem("pharmaDark")
+    === "true"
+) {
+
+    document.body.classList.add("dark");
+
+}
+
+
+/* =====================================================
+   LOGIN
+   ===================================================== */
+
+function openLogin() {
+
+    document
+        .getElementById("loginModal")
+        .classList.add("show");
+
+}
+
+
+function closeLogin() {
+
+    document
+        .getElementById("loginModal")
+        .classList.remove("show");
+
+}
+
+
+function login() {
+
+    const username =
+        document
+        .getElementById("loginUsername")
+        .value
+        .trim();
+
+    const password =
+        document
+        .getElementById("loginPassword")
+        .value;
+
+    const error =
+        document
+        .getElementById("loginError");
+
+
+    if (
+        username === "pharmacist"
+        &&
+        password === "1234"
+    ) {
+
+        closeLogin();
+
+        document
+            .getElementById("mainWebsite")
+            .style.display =
+            "none";
+
+        document
+            .querySelector(".mobile-nav")
+            .style.display =
+            "none";
+
+        document
+            .getElementById("dashboard")
+            .style.display =
+            "block";
+
+        renderRequests();
+
+    }
+
+    else {
+
+        error.innerText =
+            "❌ Incorrect username or password.";
+
+    }
+
+}
+
+
+/* =====================================================
+   LOGOUT
+   ===================================================== */
+
+function logout() {
+
+    document
+        .getElementById("dashboard")
+        .style.display =
+        "none";
+
+    document
+        .getElementById("mainWebsite")
+        .style.display =
+        "block";
+
+    document
+        .querySelector(".mobile-nav")
+        .style.display =
+        "flex";
+
+}
+
+
+/* =====================================================
+   CONSULTATION DATA
+   ===================================================== */
+
+let requests =
+    JSON.parse(
+        localStorage.getItem(
+            "pharmaConsultations"
+        )
+    ) || [];
+
+
+/* =====================================================
+   CONSULTATION FORM
+   ===================================================== */
+
+document
+    .getElementById("consultationForm")
+    .addEventListener(
+        "submit",
+        function(event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document
+                .getElementById(
+                    "patientName"
+                )
+                .value
+                .trim();
+
+
+            const phone =
+                document
+                .getElementById(
+                    "patientPhone"
+                )
+                .value
+                .trim();
+
+
+            const service =
+                document
+                .getElementById(
+                    "consultationType"
+                )
+                .value;
+
+
+            const date =
+                document
+                .getElementById(
+                    "appointmentDate"
+                )
+                .value;
+
+
+            const message =
+                document
+                .getElementById(
+                    "patientMessage"
+                )
+                .value
+                .trim();
+
+
+            const request = {
+
+                id: Date.now(),
+
+                name: name,
+
+                phone: phone,
+
+                service: service,
+
+                date: date,
+
+                message: message,
+
+                status:
+                    "Pending"
+
+            };
+
+
+            requests.push(request);
+
+
+            saveRequests();
+
+
+            const success =
+                document
+                .getElementById(
+                    "successBox"
+                );
+
+
+            success.style.display =
+                "block";
+
+
+            success.innerHTML =
+                "✅ Request submitted successfully! " +
+                "The pharmacist can review it from the dashboard.";
+
+
+            this.reset();
+
+
+            window.scrollTo({
+
+                top:
+                    document
+                    .getElementById(
+                        "consultation"
+                    )
+                    .offsetTop,
+
+                behavior:
+                    "smooth"
+
+            });
+
+        }
+    );
+
+
+/* =====================================================
+   SAVE
+   ===================================================== */
+
+function saveRequests() {
+
+    localStorage.setItem(
+
+        "pharmaConsultations",
+
+        JSON.stringify(requests)
+
+    );
+
+}
+
+
+/* =====================================================
+   RENDER REQUESTS
+   ===================================================== */
+
+function renderRequests() {
+
+    const list =
+        document
+        .getElementById(
+            "requestList"
+        );
+
+
+    const search =
+        document
+        .getElementById(
+            "searchRequests"
+        )
+        ?.value
+        .toLowerCase()
+        .trim()
+        || "";
+
+
+    let filtered =
+        requests.filter(
+            function(request) {
+
+                return (
+
+                    request.name
+                        .toLowerCase()
+                        .includes(search)
+
+                    ||
+
+                    request.service
+                        .toLowerCase()
+                        .includes(search)
+
+                    ||
+
+                    request.phone
+                        .includes(search)
+
+                );
+
+            }
+        );
+
+
+    list.innerHTML = "";
+
+
+    if (filtered.length === 0) {
+
+        list.innerHTML = `
+
+            <div class="empty">
+
+                <div class="empty-icon">
+                    📭
+                </div>
+
+                <strong>
+                    No consultation requests
+                </strong>
+
+                <p>
+                    New patient requests will appear here.
+                </p>
+
+            </div>
+
+        `;
+
+    }
+
+
+    filtered
+        .slice()
+        .reverse()
+        .forEach(
+            function(request) {
+
+
+                const card =
+                    document
+                    .createElement(
+                        "div"
+                    );
+
+
+                card.className =
+                    "request-card";
+
+
+                const badgeClass =
+                    request.status
+                    === "Completed"
+                    ?
+                    "completed"
+                    :
+                    "pending";
+
+
+                card.innerHTML = `
+
+                    <div class="request-top">
+
+                        <div>
+
+                            <div class="patient-name">
+
+                                👤
+                                ${escapeHTML(
+                                    request.name
+                                )}
+
+                            </div>
+
+                            <div class="request-detail">
+
+                                📱
+                                ${escapeHTML(
+                                    request.phone
+                                )}
+
+                            </div>
+
+                            <div class="request-detail">
+
+                                💊
+                                ${escapeHTML(
+                                    request.service
+                                )}
+
+                            </div>
+
+                            <div class="request-detail">
+
+                                📅
+                                ${escapeHTML(
+                                    request.date
+                                )}
+
+                            </div>
+
+                        </div>
+
+
+                        <span
+                            class="badge ${badgeClass}">
+
+                            ${request.status}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="request-message">
+
+                        <strong>
+                            Patient Question:
+                        </strong>
+
+                        <br>
+
+                        ${escapeHTML(
+                            request.message
+                        )}
+
+                    </div>
+
+
+                    <div class="request-actions">
+
+                        ${
+                            request.status
+                            === "Pending"
+
+                            ?
+
+                            `
+                            <button
+                                class="complete"
+                                onclick="completeRequest(${request.id})">
+
+                                ✓ Mark Completed
+
+                            </button>
+                            `
+
+                            :
+
+                            `
+                            <button
+                                class="complete"
+                                disabled>
+
+                                ✓ Completed
+
+                            </button>
+                            `
+                        }
+
+
+                        <button
+                            class="delete"
+                            onclick="deleteRequest(${request.id})">
+
+                            🗑 Delete
+
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                list.appendChild(card);
+
+            }
+        );
+
+
+    updateStats();
+
+}
+
+
+/* =====================================================
+   COMPLETE
+   ===================================================== */
+
+function completeRequest(id) {
+
+    requests =
+        requests.map(
+            function(request) {
+
+                if (
+                    request.id
+                    ===
+                    id
+                ) {
+
+                    request.status =
+                        "Completed";
+
+                }
+
+                return request;
+
+            }
+        );
+
+
+    saveRequests();
+
+    renderRequests();
+
+}
+
+
+/* =====================================================
+   DELETE
+   ===================================================== */
+
+function deleteRequest(id) {
+
+    if (
+        !confirm(
+            "Delete this consultation request?"
+        )
+    ) {
+
+        return;
+
+    }
+
+
+    requests =
+        requests.filter(
+            function(request) {
+
+                return request.id !== id;
+
+            }
+        );
+
+
+    saveRequests();
+
+    renderRequests();
+
+}
+
+
+/* =====================================================
+   STATISTICS
+   ===================================================== */
+
+function updateStats() {
+
+    const total =
+        requests.length;
+
+
+    const pending =
+        requests.filter(
+            function(request) {
+
+                return request.status
+                    === "Pending";
+
+            }
+        ).length;
+
+
+    const completed =
+        requests.filter(
+            function(request) {
+
+                return request.status
+                    === "Completed";
+
+            }
+        ).length;
+
+
+    document
+        .getElementById(
+            "totalCount"
+        )
+        .innerText =
+        total;
+
+
+    document
+        .getElementById(
+            "pendingCount"
+        )
+        .innerText =
+        pending;
+
+
+    document
+        .getElementById(
+            "completedCount"
+        )
+        .innerText =
+        completed;
+
+
+    document
+        .getElementById(
+            "todayDate"
+        )
+        .innerText =
+        new Date()
+        .toLocaleDateString(
+            "en-IN"
+        );
+
+}
+
+
+/* =====================================================
+   ESCAPE HTML
+   ===================================================== */
+
+function escapeHTML(value) {
+
+    return String(value)
+
+        .replaceAll(
+            "&",
+            "&amp;"
+        )
+
+        .replaceAll(
+            "<",
+            "&lt;"
+        )
+
+        .replaceAll(
+            ">",
+            "&gt;"
+        )
+
+        .replaceAll(
+            '"',
+            "&quot;"
+        )
+
+        .replaceAll(
+            "'",
+            "&#039;"
+        );
+
+}
+
+
+
+/* =====================================================
+   VERSION 4 - PHARMA AI ENGINE
+   Offline educational knowledge assistant
+   ===================================================== */
+const pharmaAIKnowledge=[
+{keys:["paracetamol","acetaminophen"],answer:`Paracetamol is a commonly used analgesic and antipyretic medicine.
+
+• Analgesic: helps relieve pain.
+• Antipyretic: helps reduce fever.
+• Use it according to the product label or professional advice.
+• Do not exceed the recommended amount.
+• If you have liver disease or take other products containing paracetamol, ask a healthcare professional before use.`},
+{keys:["ors","oral rehydration"],answer:`ORS means Oral Rehydration Solution. It helps replace water and electrolytes lost from the body, especially during dehydration associated with diarrhoea or vomiting.
+
+Prepare ORS exactly according to the packet instructions. Severe dehydration, persistent vomiting, confusion, very little urine, or other serious symptoms require prompt medical attention.`},
+{keys:["antibiotic","antibiotics","antimicrobial"],answer:`Antibiotics are medicines used to treat certain bacterial infections.
+
+They do not treat most viral infections such as common colds. Antibiotics should be used only when appropriately prescribed or advised by a qualified healthcare professional. Do not share antibiotics or use leftover courses.`},
+{keys:["drug interaction","medicine interaction","interaction"],answer:`A drug interaction occurs when one medicine, food, drink, supplement, or substance changes the effect of another medicine.
+
+Interactions depend on the exact medicines and doses. Keep a complete list of medicines and ask a pharmacist or doctor to check it before starting or stopping medicines.`},
+{keys:["side effect","side effects","adverse effect","adr"],answer:`A side effect is an unwanted effect that can occur with a medicine. The type and seriousness vary between medicines and people.
+
+Follow the medicine information and professional advice. Difficulty breathing, swelling of the face or throat, fainting, or severe allergic symptoms require urgent medical attention.`},
+{keys:["storage","store medicine","storing medicine"],answer:`Medicines should be stored according to the product label or package instructions.
+
+Keep medicines in their original packaging when practical, away from excessive heat, moisture, and direct sunlight when instructed, and out of reach of children. Do not use expired medicines.`},
+{keys:["volumetric analysis","titration","volumetric"],answer:`Volumetric analysis is a quantitative analytical method in which the amount or concentration of a substance is determined by measuring the volume of a solution of known concentration that reacts with it.
+
+Titration is a common technique. Important terms include titrant, analyte, standard solution, endpoint, equivalence point, indicator and titre value.`},
+{keys:["acid base titration","acid-base titration","neutralization titration"],answer:`Acid-base titration is based on a reaction between an acid and a base.
+
+A standard solution is added to the sample until the endpoint is reached, often using a suitable indicator. The measured volume is then used in the appropriate calculation to determine concentration or amount of analyte.`},
+{keys:["source of error","sources of error","types of errors","error in analysis"],answer:`Analytical errors are differences between an observed result and the accepted or true value.
+
+Common categories include:
+• Systematic errors — tend to occur consistently.
+• Random errors — vary unpredictably between measurements.
+• Gross errors — can result from mistakes in reading, recording or procedure.
+
+Calibration, standardization, careful technique and repeated measurements can help reduce errors.`},
+{keys:["pharmaceutical chemistry"],answer:`Pharmaceutical chemistry applies chemical principles to the study and analysis of pharmaceutical substances.
+
+D.Pharm topics commonly include properties, identification, purity, analysis, storage and basic chemistry of pharmaceutical substances.`},
+{keys:["pharmacist","role of pharmacist","what does a pharmacist do"],answer:`Pharmacists are healthcare professionals who support safe and effective medicine use.
+
+Their roles can include dispensing where legally authorized, counselling patients, checking medication-related issues, supporting adherence, identifying potential interactions and promoting safe medicine use.`},
+{keys:["dosage form","dosage forms"],answer:`A dosage form is the physical form in which a medicine is supplied for administration.
+
+Examples include tablets, capsules, syrups, suspensions, creams, ointments, injections and inhalations. Dosage forms affect how medicines are administered, released, stored and used.`}
+];
+
+function normalizeAIText(t){return String(t||"").toLowerCase().replace(/[^\w\s-]/g," ").replace(/\s+/g," ").trim()}
+function getAIAnswer(q0){
+ const q=normalizeAIText(q0);
+ if(!q)return "Please type a pharmacy or medicine-related question first.";
+ for(const item of pharmaAIKnowledge){if(item.keys.some(k=>q.includes(normalizeAIText(k))))return item.answer}
+ if(q==="hi"||q.includes("hello")||q.includes("namaste"))return `Hello! 👋 I am PharmaAI, the educational assistant in Dr. Yashpreet Singh's PharmaCare project.\n\nAsk me about medicines, pharmacy, pharmaceutical chemistry, volumetric analysis, titration, errors and safe medicine-use concepts.`;
+ if(q.includes("help")||q.includes("what can you do"))return `I can explain:\n• Medicines and basic medicine-use concepts\n• Antibiotics and antimicrobial awareness\n• ORS and common medicine topics\n• Drug-interaction awareness\n• Pharmaceutical chemistry\n• Volumetric analysis and titration\n• Sources/types of analytical errors\n• Dosage forms and medicine storage\n\nFor personal diagnosis, dosing or treatment decisions, consult a qualified healthcare professional.`;
+ return `I couldn't find a reliable built-in educational answer for that question.\n\nTry:\n• What is paracetamol used for?\n• What is ORS?\n• What are antibiotics?\n• What is volumetric analysis?\n• What is acid-base titration?\n• What are sources of errors?\n• What does a pharmacist do?`;
+}
+let aiHistory=JSON.parse(localStorage.getItem("pharmaAIHistory")||"[]");
+function saveAIHistory(){localStorage.setItem("pharmaAIHistory",JSON.stringify(aiHistory.slice(0,10)))}
+function renderAIHistory(){
+ const box=document.getElementById("aiHistoryList"); if(!box)return;
+ if(!aiHistory.length){box.innerHTML='<div class="empty" style="padding:15px 5px"><div class="empty-icon" style="font-size:28px">💬</div><p>Your recent AI questions will appear here.</p></div>';return}
+ box.innerHTML=aiHistory.map((x,i)=>`<div class="ai-history-item"><div class="ai-history-q">Q: ${escapeHTML(x.question)}</div><div style="color:var(--muted)">A: ${escapeHTML(x.answer.slice(0,140))}${x.answer.length>140?"...":""}</div><button class="ai-chip" style="margin-top:7px" onclick="reuseAIQuestion(${i})">Ask again</button></div>`).join("")
+}
+function askAIChip(q){document.getElementById("aiQuestion").value=q;askPharmaAI()}
+function askPharmaAI(){
+ const input=document.getElementById("aiQuestion"),status=document.getElementById("aiStatus"),box=document.getElementById("aiAnswer"),out=document.getElementById("aiAnswerText");
+ const q=input.value.trim();
+ if(!q){status.innerText="⚠️ Please enter a question.";input.focus();return}
+ status.innerHTML='Thinking <span class="ai-typing"><span></span><span></span><span></span></span>';box.classList.remove("show");
+ setTimeout(()=>{const answer=getAIAnswer(q);out.textContent=answer;box.classList.add("show");status.innerText="✅ Answer generated by PharmaAI educational engine.";aiHistory.unshift({question:q,answer:answer,time:Date.now()});saveAIHistory();renderAIHistory()},350)
+}
+function copyAIAnswer(){
+ const text=document.getElementById("aiAnswerText").innerText||"";
+ if(!text)return;
+ if(navigator.clipboard)navigator.clipboard.writeText(text).then(()=>document.getElementById("aiStatus").innerText="✅ Answer copied.");
+ else{const a=document.createElement("textarea");a.value=text;document.body.appendChild(a);a.select();document.execCommand("copy");a.remove();document.getElementById("aiStatus").innerText="✅ Answer copied."}
+}
+function clearAI(){document.getElementById("aiQuestion").value="";document.getElementById("aiAnswerText").textContent="";document.getElementById("aiAnswer").classList.remove("show");document.getElementById("aiStatus").innerText=""}
+function clearAIHistory(){if(!confirm("Clear PharmaAI question history?"))return;aiHistory=[];saveAIHistory();renderAIHistory()}
+function reuseAIQuestion(i){if(!aiHistory[i])return;document.getElementById("aiQuestion").value=aiHistory[i].question;document.getElementById("pharmaAI").scrollIntoView({behavior:"smooth"})}
+renderAIHistory();
+document.getElementById("aiQuestion")?.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();askPharmaAI()}})
+
+
+/* =====================================================
+   SET MINIMUM APPOINTMENT DATE
+   ===================================================== */
+
+const dateInput =
+    document
+    .getElementById(
+        "appointmentDate"
+    );
+
+
+const today =
+    new Date()
+    .toISOString()
+    .split("T")[0];
+
+
+dateInput.min =
+    today;
+
+
+/* =====================================================
+   INITIALIZE
+   ===================================================== */
+
+updateStats();
+
+</script>
+
+</body>
+</html>
