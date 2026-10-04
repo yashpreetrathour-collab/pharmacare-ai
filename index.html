@@ -8,7 +8,7 @@
                maximum-scale=1.0,
                user-scalable=no">
 
-<title>PharmaCare AI | Dr. Yashpreet Singh</title>
+<title>PharmaCare AI | Dr. Yashpreet Singh • Version 4.2</title>
 
 <style>
 
@@ -1527,6 +1527,63 @@ body.dark .ai-section{background:linear-gradient(145deg,#12343a,var(--bg))}
 @keyframes aidot{from{opacity:.25;transform:translateY(0)}to{opacity:1;transform:translateY(-3px)}}
 @media(min-width:700px){.ai-card{padding:28px}.ai-title{font-size:30px}}
 
+
+/* Pharmacist reply tools */
+.reply-box{
+    margin-top:12px;
+    padding:12px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    background:var(--card);
+}
+.reply-box textarea{
+    width:100%;
+    min-height:80px;
+    resize:vertical;
+    padding:10px;
+    border:1px solid var(--border);
+    border-radius:10px;
+    background:var(--bg);
+    color:var(--text);
+    font-family:inherit;
+    box-sizing:border-box;
+}
+.reply-actions{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:8px;
+}
+.reply-actions button{
+    flex:1;
+    min-width:130px;
+}
+.saved-reply{
+    margin-top:10px;
+    padding:10px;
+    border-radius:10px;
+    background:rgba(8,180,140,.08);
+    font-size:13px;
+}
+
+
+/* =====================================================
+   VERSION 4.2 PATIENT CHAT
+   ===================================================== */
+.patient-chat-card{max-width:760px;margin:20px auto;padding:18px;border-radius:20px;background:var(--card,#fff);box-shadow:0 8px 30px rgba(0,0,0,.08);border:1px solid rgba(0,0,0,.06)}
+.patient-chat-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.patient-chat-header h3{margin:0}
+.chat-status{font-size:12px;padding:6px 10px;border-radius:999px;background:#eef7ee}
+.chat-thread{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow:auto;padding:8px 2px;margin:10px 0}
+.chat-bubble{max-width:88%;padding:12px 14px;border-radius:16px;font-size:14px;line-height:1.5;white-space:pre-wrap}
+.chat-bubble.patient{align-self:flex-end;background:#e8f1ff;border-bottom-right-radius:4px}
+.chat-bubble.pharmacist{align-self:flex-start;background:#eaf8ee;border-bottom-left-radius:4px}
+.chat-time{display:block;font-size:10px;opacity:.65;margin-top:5px}
+.token-row{display:flex;gap:8px;flex-wrap:wrap}
+.token-row input{flex:1;min-width:220px}
+.chat-note{font-size:12px;color:var(--muted);margin:8px 0 0}
+@media(max-width:600px){.patient-chat-card{padding:14px}.chat-bubble{max-width:94%}}
+
 </style>
 </head>
 
@@ -1989,6 +2046,34 @@ body.dark .ai-section{background:linear-gradient(145deg,#12343a,var(--bg))}
 </section>
 
 
+
+<!-- =====================================================
+     PATIENT CONSULTATION CHAT • VERSION 4.2
+     ===================================================== -->
+<section id="patientChatSection">
+<div class="container">
+<div class="section-title">
+<h2>💬 My Consultation Chat</h2>
+<p>Check replies from the pharmacist for your consultation.</p>
+</div>
+<div class="patient-chat-card">
+<div class="patient-chat-header">
+<h3 id="patientChatTitle">Your Consultation</h3>
+<span class="chat-status" id="patientChatStatus">Not connected</span>
+</div>
+<div class="token-row">
+<input id="consultationTokenInput" type="text" placeholder="Enter your consultation code">
+<button class="btn btn-primary" type="button" onclick="openPatientChat()">🔎 Open Chat</button>
+</div>
+<p class="chat-note">After submitting a consultation, your private consultation code is shown here. Keep it safe so you can check your pharmacist's reply later.</p>
+<div id="patientChatThread" class="chat-thread">
+<div class="empty"><div class="empty-icon">💬</div><strong>No consultation opened</strong><p>Submit a consultation or enter your consultation code.</p></div>
+</div>
+<button id="refreshPatientChat" class="btn btn-primary full-btn" type="button" onclick="refreshPatientChat()" style="display:none">🔄 Refresh Reply</button>
+</div>
+</div>
+</section>
+
 <!-- WHY CONSULT -->
 
 <section>
@@ -2266,13 +2351,14 @@ medical treatment.
 <div class="form-group">
 
 <label>
-    Username
+    Pharmacist Email
 </label>
 
 <input
     type="text"
     id="loginUsername"
-    placeholder="Enter username">
+    placeholder="Enter pharmacist email"
+    autocomplete="username">
 
 </div>
 
@@ -2286,7 +2372,8 @@ medical treatment.
 <input
     type="password"
     id="loginPassword"
-    placeholder="Enter password">
+    placeholder="Enter password"
+    autocomplete="current-password">
 
 </div>
 
@@ -2317,7 +2404,7 @@ medical treatment.
     font-size:11px;
     margin-top:15px;">
 
-    Demo: pharmacist / 1234
+    Use the pharmacist account created in Supabase Authentication.
 
 </p>
 
@@ -2629,9 +2716,9 @@ counselling.
 
 <br>
 
-The patient requests displayed here are
-stored locally in the browser for this
-college-project demonstration.
+Consultation requests are stored securely in the
+PharmaCare-AI Supabase database and can be
+received from different devices.
 
 </div>
 
@@ -2640,11 +2727,13 @@ college-project demonstration.
 
 </div>
 
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
 
 /* =====================================================
-   PHARMACARE VERSION 4 JAVASCRIPT • AI EDITION
+   PHARMACARE VERSION 4.2 JAVASCRIPT • PATIENT CHAT EDITION
    ===================================================== */
 
 
@@ -2696,231 +2785,185 @@ function closeLogin() {
 
 
 function login() {
+    const email = document.getElementById("loginUsername").value.trim();
+    const password = document.getElementById("loginPassword").value;
+    const error = document.getElementById("loginError");
+    error.innerText = "";
 
-    const username =
-        document
-        .getElementById("loginUsername")
-        .value
-        .trim();
+    if (!email || !password) {
+        error.innerText = "❌ Enter your pharmacist email and password.";
+        return;
+    }
 
-    const password =
-        document
-        .getElementById("loginPassword")
-        .value;
-
-    const error =
-        document
-        .getElementById("loginError");
-
-
-    if (
-        username === "pharmacist"
-        &&
-        password === "1234"
-    ) {
-
+    supabaseClient.auth.signInWithPassword({ email, password }).then(({ error: authError }) => {
+        if (authError) {
+            error.innerText = "❌ " + authError.message;
+            return;
+        }
         closeLogin();
-
-        document
-            .getElementById("mainWebsite")
-            .style.display =
-            "none";
-
-        document
-            .querySelector(".mobile-nav")
-            .style.display =
-            "none";
-
-        document
-            .getElementById("dashboard")
-            .style.display =
-            "block";
-
-        renderRequests();
-
-    }
-
-    else {
-
-        error.innerText =
-            "❌ Incorrect username or password.";
-
-    }
-
+        document.getElementById("mainWebsite").style.display = "none";
+        document.querySelector(".mobile-nav").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+        loadRequests();
+    });
 }
-
 
 /* =====================================================
    LOGOUT
    ===================================================== */
 
-function logout() {
-
-    document
-        .getElementById("dashboard")
-        .style.display =
-        "none";
-
-    document
-        .getElementById("mainWebsite")
-        .style.display =
-        "block";
-
-    document
-        .querySelector(".mobile-nav")
-        .style.display =
-        "flex";
-
+async function logout() {
+    await supabaseClient.auth.signOut();
+    document.getElementById("dashboard").style.display = "none";
+    document.getElementById("mainWebsite").style.display = "block";
+    document.querySelector(".mobile-nav").style.display = "flex";
+    requests = [];
+    renderRequests();
 }
 
+/* =====================================================
+   SUPABASE CONFIGURATION
+   ===================================================== */
+
+const SUPABASE_URL = "https://tjnejijcuympvslelffd.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_rPv6Ta72MaLMkxVy8xg-TA_N8J2fxzN";
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
 /* =====================================================
    CONSULTATION DATA
    ===================================================== */
 
-let requests =
-    JSON.parse(
-        localStorage.getItem(
-            "pharmaConsultations"
-        )
-    ) || [];
+let requests = [];
 
+async function loadRequests() {
+    const { data, error } = await supabaseClient
+        .from("consultation_requests")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+    if (error) {
+        console.error(error);
+        const list = document.getElementById("requestList");
+        if (list) list.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><strong>Could not load consultation requests</strong><p>${escapeHTML(error.message)}</p></div>`;
+        return;
+    }
+    requests = data || [];
+    renderRequests();
+}
 
 /* =====================================================
    CONSULTATION FORM
    ===================================================== */
 
-document
-    .getElementById("consultationForm")
-    .addEventListener(
-        "submit",
-        function(event) {
+document.getElementById("consultationForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
 
-            event.preventDefault();
+    const name = document.getElementById("patientName").value.trim();
+    const phone = document.getElementById("patientPhone").value.trim();
+    const service = document.getElementById("consultationType").value;
+    const date = document.getElementById("appointmentDate").value;
+    const message = document.getElementById("patientMessage").value.trim();
+    const submitButton = this.querySelector('button[type="submit"]');
+    const originalText = submitButton ? submitButton.innerHTML : "";
+    const clientToken = crypto.randomUUID();
 
+    if (submitButton) { submitButton.disabled = true; submitButton.innerHTML = "⏳ Sending..."; }
 
-            const name =
-                document
-                .getElementById(
-                    "patientName"
-                )
-                .value
-                .trim();
+    const { error } = await supabaseClient.from("consultation_requests").insert({
+        name, phone, service, appointment_date: date || null, message, status: "Pending", client_token: clientToken
+    });
 
+    const success = document.getElementById("successBox");
+    success.style.display = "block";
 
-            const phone =
-                document
-                .getElementById(
-                    "patientPhone"
-                )
-                .value
-                .trim();
+    if (error) {
+        console.error(error);
+        success.innerHTML = "❌ Request could not be submitted. Please try again.";
+    } else {
+        localStorage.setItem("pharmaConsultationToken", clientToken);
+        document.getElementById("consultationTokenInput").value = clientToken;
+        success.innerHTML = "✅ Request submitted! Your private consultation code is ready below. Keep it safe.";
+        this.reset();
+        openPatientChat();
+        document.getElementById("patientChatSection").scrollIntoView({behavior:"smooth", block:"start"});
+    }
 
-
-            const service =
-                document
-                .getElementById(
-                    "consultationType"
-                )
-                .value;
-
-
-            const date =
-                document
-                .getElementById(
-                    "appointmentDate"
-                )
-                .value;
-
-
-            const message =
-                document
-                .getElementById(
-                    "patientMessage"
-                )
-                .value
-                .trim();
-
-
-            const request = {
-
-                id: Date.now(),
-
-                name: name,
-
-                phone: phone,
-
-                service: service,
-
-                date: date,
-
-                message: message,
-
-                status:
-                    "Pending"
-
-            };
-
-
-            requests.push(request);
-
-
-            saveRequests();
-
-
-            const success =
-                document
-                .getElementById(
-                    "successBox"
-                );
-
-
-            success.style.display =
-                "block";
-
-
-            success.innerHTML =
-                "✅ Request submitted successfully! " +
-                "The pharmacist can review it from the dashboard.";
-
-
-            this.reset();
-
-
-            window.scrollTo({
-
-                top:
-                    document
-                    .getElementById(
-                        "consultation"
-                    )
-                    .offsetTop,
-
-                behavior:
-                    "smooth"
-
-            });
-
-        }
-    );
-
+    if (submitButton) { submitButton.disabled = false; submitButton.innerHTML = originalText; }
+});
 
 /* =====================================================
-   SAVE
+   PATIENT CHAT • PRIVATE TOKEN
    ===================================================== */
+const PATIENT_CHAT_FUNCTION = SUPABASE_URL + "/rest/v1/rpc/get_my_consultation";
+let patientChatTimer = null;
 
-function saveRequests() {
-
-    localStorage.setItem(
-
-        "pharmaConsultations",
-
-        JSON.stringify(requests)
-
-    );
-
+function getPatientToken(){
+    return (document.getElementById("consultationTokenInput")?.value.trim() || localStorage.getItem("pharmaConsultationToken") || "").toLowerCase();
 }
 
+async function openPatientChat(){
+    const token = getPatientToken();
+    const box = document.getElementById("patientChatThread");
+    const status = document.getElementById("patientChatStatus");
+    if(!token){
+        box.innerHTML = '<div class="empty"><div class="empty-icon">🔑</div><strong>Enter your consultation code</strong><p>Your code is shown after submitting a consultation.</p></div>';
+        return;
+    }
+    localStorage.setItem("pharmaConsultationToken", token);
+    document.getElementById("consultationTokenInput").value = token;
+    status.textContent = "Loading…";
+    await refreshPatientChat();
+    document.getElementById("refreshPatientChat").style.display = "block";
+    if(patientChatTimer) clearInterval(patientChatTimer);
+    patientChatTimer = setInterval(refreshPatientChat, 10000);
+}
+
+async function refreshPatientChat(){
+    const token = getPatientToken();
+    const box = document.getElementById("patientChatThread");
+    const status = document.getElementById("patientChatStatus");
+    if(!token) return;
+    try{
+        const {data, error} = await supabaseClient.rpc("get_my_consultation", {p_token: token});
+        if(error) throw error;
+        if(!data || !data.length){
+            status.textContent = "Not found";
+            box.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div><strong>Consultation not found</strong><p>Check your consultation code.</p></div>';
+            return;
+        }
+        const r=data[0];
+        status.textContent = r.pharmacist_reply ? "Replied ✓" : (r.status || "Pending");
+        document.getElementById("patientChatTitle").textContent = "Chat with Pharmacist";
+        box.innerHTML = `
+          <div class="chat-bubble patient"><strong>You</strong><br>${escapeHTML(r.message || "")}${r.created_at ? `<span class="chat-time">${escapeHTML(new Date(r.created_at).toLocaleString())}</span>`:""}</div>
+          ${r.pharmacist_reply ? `<div class="chat-bubble pharmacist"><strong>👨‍⚕️ Dr. Yashpreet Singh</strong><br>${escapeHTML(r.pharmacist_reply)}${r.replied_at ? `<span class="chat-time">${escapeHTML(new Date(r.replied_at).toLocaleString())}</span>`:""}</div>` : `<div class="empty"><div class="empty-icon">⏳</div><strong>Waiting for pharmacist reply</strong><p>Your request has been received. This chat will update automatically.</p></div>`}
+        `;
+    }catch(e){
+        console.error(e);
+        status.textContent="Error";
+        box.innerHTML='<div class="empty"><div class="empty-icon">⚠️</div><strong>Could not load chat</strong><p>Please try again.</p></div>';
+    }
+}
+
+(function restorePatientChat(){
+    const token=localStorage.getItem("pharmaConsultationToken");
+    if(token){
+        const input=document.getElementById("consultationTokenInput");
+        if(input) input.value=token;
+        openPatientChat();
+    }
+})();
+
+/* =====================================================
+   REALTIME REQUEST UPDATES
+   ===================================================== */
+
+supabaseClient.channel("consultation-requests")
+    .on("postgres_changes", { event: "*", schema: "public", table: "consultation_requests" }, function() {
+        const dashboard = document.getElementById("dashboard");
+        if (dashboard && dashboard.style.display !== "none") loadRequests();
+    })
+    .subscribe();
 
 /* =====================================================
    RENDER REQUESTS
@@ -2928,229 +2971,173 @@ function saveRequests() {
 
 function renderRequests() {
 
-    const list =
-        document
-        .getElementById(
-            "requestList"
+    const list = document.getElementById("requestList");
+    const search = document.getElementById("searchRequests")?.value.toLowerCase().trim() || "";
+
+    let filtered = requests.filter(function(request) {
+        return (
+            String(request.name || "").toLowerCase().includes(search) ||
+            String(request.service || "").toLowerCase().includes(search) ||
+            String(request.phone || "").includes(search) ||
+            String(request.message || "").toLowerCase().includes(search)
         );
-
-
-    const search =
-        document
-        .getElementById(
-            "searchRequests"
-        )
-        ?.value
-        .toLowerCase()
-        .trim()
-        || "";
-
-
-    let filtered =
-        requests.filter(
-            function(request) {
-
-                return (
-
-                    request.name
-                        .toLowerCase()
-                        .includes(search)
-
-                    ||
-
-                    request.service
-                        .toLowerCase()
-                        .includes(search)
-
-                    ||
-
-                    request.phone
-                        .includes(search)
-
-                );
-
-            }
-        );
-
+    });
 
     list.innerHTML = "";
 
-
     if (filtered.length === 0) {
-
         list.innerHTML = `
-
             <div class="empty">
-
-                <div class="empty-icon">
-                    📭
-                </div>
-
-                <strong>
-                    No consultation requests
-                </strong>
-
-                <p>
-                    New patient requests will appear here.
-                </p>
-
+                <div class="empty-icon">📭</div>
+                <strong>No consultation requests</strong>
+                <p>New patient requests will appear here.</p>
             </div>
-
         `;
-
     }
 
+    filtered.forEach(function(request) {
 
-    filtered
-        .slice()
-        .reverse()
-        .forEach(
-            function(request) {
+        const card = document.createElement("div");
+        card.className = "request-card";
 
+        const badgeClass = request.status === "Completed" ? "completed" : "pending";
+        const requestId = String(request.id).replace(/'/g, "\\'");
+        const appointmentDate = request.appointment_date || "Not specified";
 
-                const card =
-                    document
-                    .createElement(
-                        "div"
-                    );
+        card.innerHTML = `
+            <div class="request-top">
+                <div>
+                    <div class="patient-name">👤 ${escapeHTML(request.name || "")}</div>
+                    <div class="request-detail">📱 ${escapeHTML(request.phone || "")}</div>
+                    <div class="request-detail">💊 ${escapeHTML(request.service || "")}</div>
+                    <div class="request-detail">📅 ${escapeHTML(appointmentDate)}</div>
+                </div>
+                <span class="badge ${badgeClass}">${escapeHTML(request.status || "Pending")}</span>
+            </div>
 
+            <div class="request-message">
+                <strong>Patient Question:</strong><br>
+                ${escapeHTML(request.message || "No question provided.")}
+            </div>
 
-                card.className =
-                    "request-card";
+            <div class="reply-box">
+                <strong>💬 Pharmacist Reply</strong>
 
-
-                const badgeClass =
-                    request.status
-                    === "Completed"
-                    ?
-                    "completed"
-                    :
-                    "pending";
-
-
-                card.innerHTML = `
-
-                    <div class="request-top">
-
-                        <div>
-
-                            <div class="patient-name">
-
-                                👤
-                                ${escapeHTML(
-                                    request.name
-                                )}
-
-                            </div>
-
-                            <div class="request-detail">
-
-                                📱
-                                ${escapeHTML(
-                                    request.phone
-                                )}
-
-                            </div>
-
-                            <div class="request-detail">
-
-                                💊
-                                ${escapeHTML(
-                                    request.service
-                                )}
-
-                            </div>
-
-                            <div class="request-detail">
-
-                                📅
-                                ${escapeHTML(
-                                    request.date
-                                )}
-
-                            </div>
-
-                        </div>
-
-
-                        <span
-                            class="badge ${badgeClass}">
-
-                            ${request.status}
-
-                        </span>
-
+                ${request.pharmacist_reply ? `
+                    <div class="saved-reply">
+                        <strong>Saved reply:</strong><br>
+                        ${escapeHTML(request.pharmacist_reply)}
+                        ${request.replied_at ? `<br><small>Replied: ${escapeHTML(new Date(request.replied_at).toLocaleString())}</small>` : ""}
                     </div>
+                ` : ""}
 
+                <textarea
+                    id="reply-${requestId}"
+                    maxlength="4000"
+                    placeholder="Write your reply to this patient...">${escapeHTML(request.pharmacist_reply || "")}</textarea>
 
-                    <div class="request-message">
+                <div class="reply-actions">
+                    <button class="complete" onclick="saveReply('${requestId}')">
+                        💾 Save Reply
+                    </button>
 
-                        <strong>
-                            Patient Question:
-                        </strong>
+                    <button class="complete" onclick="replyViaWhatsApp('${requestId}')">
+                        💬 WhatsApp Reply
+                    </button>
+                </div>
+            </div>
 
-                        <br>
+            <div class="request-actions">
+                ${
+                    request.status === "Pending"
+                    ? `
+                    <button class="complete" onclick="completeRequest('${requestId}')">
+                        ✓ Mark Completed
+                    </button>
+                    `
+                    : `
+                    <button class="complete" disabled>
+                        ✓ Completed
+                    </button>
+                    `
+                }
 
-                        ${escapeHTML(
-                            request.message
-                        )}
+                <button class="delete" onclick="deleteRequest('${requestId}')">
+                    🗑 Delete
+                </button>
+            </div>
+        `;
 
-                    </div>
-
-
-                    <div class="request-actions">
-
-                        ${
-                            request.status
-                            === "Pending"
-
-                            ?
-
-                            `
-                            <button
-                                class="complete"
-                                onclick="completeRequest(${request.id})">
-
-                                ✓ Mark Completed
-
-                            </button>
-                            `
-
-                            :
-
-                            `
-                            <button
-                                class="complete"
-                                disabled>
-
-                                ✓ Completed
-
-                            </button>
-                            `
-                        }
-
-
-                        <button
-                            class="delete"
-                            onclick="deleteRequest(${request.id})">
-
-                            🗑 Delete
-
-                        </button>
-
-                    </div>
-
-                `;
-
-
-                list.appendChild(card);
-
-            }
-        );
-
+        list.appendChild(card);
+    });
 
     updateStats();
+}
 
+/* =====================================================
+   PHARMACIST REPLY
+   ===================================================== */
+
+async function saveReply(id) {
+    const textarea = document.getElementById("reply-" + id);
+    if (!textarea) return;
+
+    const reply = textarea.value.trim();
+
+    if (!reply) {
+        alert("Please write a reply first.");
+        return;
+    }
+
+    const { error } = await supabaseClient
+        .from("consultation_requests")
+        .update({
+            pharmacist_reply: reply,
+            replied_at: new Date().toISOString()
+        })
+        .eq("id", id);
+
+    if (error) {
+        alert("Could not save reply: " + error.message);
+        return;
+    }
+
+    alert("✅ Reply saved successfully.");
+    await loadRequests();
+}
+
+function replyViaWhatsApp(id) {
+    const request = requests.find(r => String(r.id) === String(id));
+    if (!request) return;
+
+    const textarea = document.getElementById("reply-" + id);
+    const reply = textarea ? textarea.value.trim() : (request.pharmacist_reply || "");
+
+    if (!reply) {
+        alert("Please write a reply first.");
+        return;
+    }
+
+    let phone = String(request.phone || "").replace(/\D/g, "");
+
+    if (phone.length === 10) phone = "91" + phone;
+
+    if (phone.length < 11) {
+        alert("No valid phone number is available for this request. Use a full number with country code.");
+        return;
+    }
+
+    const message =
+        "Hello " + (request.name || "there") + ",\n\n" +
+        "Regarding your PharmaCare consultation request:\n\n" +
+        reply + "\n\n" +
+        "— Dr. Yashpreet Singh\nPharmaCare AI";
+
+    const url = "https://wa.me/" + phone + "?text=" + encodeURIComponent(message);
+    window.open(url, "_blank");
+
+    /* Save the reply too, so the dashboard keeps a record. */
+    saveReply(id);
 }
 
 
@@ -3158,33 +3145,10 @@ function renderRequests() {
    COMPLETE
    ===================================================== */
 
-function completeRequest(id) {
-
-    requests =
-        requests.map(
-            function(request) {
-
-                if (
-                    request.id
-                    ===
-                    id
-                ) {
-
-                    request.status =
-                        "Completed";
-
-                }
-
-                return request;
-
-            }
-        );
-
-
-    saveRequests();
-
-    renderRequests();
-
+async function completeRequest(id) {
+    const { error } = await supabaseClient.from("consultation_requests").update({ status: "Completed" }).eq("id", id);
+    if (error) { alert("Could not update request: " + error.message); return; }
+    await loadRequests();
 }
 
 
@@ -3192,33 +3156,11 @@ function completeRequest(id) {
    DELETE
    ===================================================== */
 
-function deleteRequest(id) {
-
-    if (
-        !confirm(
-            "Delete this consultation request?"
-        )
-    ) {
-
-        return;
-
-    }
-
-
-    requests =
-        requests.filter(
-            function(request) {
-
-                return request.id !== id;
-
-            }
-        );
-
-
-    saveRequests();
-
-    renderRequests();
-
+async function deleteRequest(id) {
+    if (!confirm("Delete this consultation request?")) return;
+    const { error } = await supabaseClient.from("consultation_requests").delete().eq("id", id);
+    if (error) { alert("Could not delete request: " + error.message); return; }
+    await loadRequests();
 }
 
 
@@ -3439,9 +3381,10 @@ dateInput.min =
 
 
 /* =====================================================
-   INITIALIZE
+   INITIALIZE VERSION 4.1
    ===================================================== */
 
+requests = [];
 updateStats();
 
 </script>
